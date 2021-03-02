@@ -18,14 +18,15 @@ public class PlayerBehaviour : MonoBehaviour
     public LayerMask groundMask;
     public bool isGrounded;
 
-    [Header("MiniMap")] 
+    [Header("MiniMap")]
     public GameObject miniMap;
 
     [Header("Player Sounds")]
     public AudioSource jumpSound;
     public AudioSource hitSound;
 
-    [Header("Health Bar")]
+
+    [Header("HealthBar")]
     public HealthBarScreenSpaceController healthBar;
 
     [Header("Player Abilities")]
@@ -82,13 +83,13 @@ public class PlayerBehaviour : MonoBehaviour
     public void TakeDamage(int damage)
     {
         health -= damage;
+        hitSound.Play();
         healthBar.TakeDamage(damage);
         if (health < 0)
         {
             health = 0;
-            
         }
     }
 
-   
+
 }

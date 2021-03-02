@@ -14,10 +14,9 @@ public enum CryptoState
 public class CryptoBehaviour : MonoBehaviour
 {
     [Header("Line of Sight")]
-    public bool HasLOS;
+    public bool HasLOS = false;
 
     public GameObject player;
-
     private NavMeshAgent agent;
     private Animator animator;
 
@@ -25,7 +24,9 @@ public class CryptoBehaviour : MonoBehaviour
     public float attackDistance;
     public PlayerBehaviour playerBehaviour;
     public float damageDelay = 1.0f;
-    private bool isAttacking;
+    public bool isAttacking = false;
+    public float kickForce = 0.01f;
+    public float distanceToPlayer;
 
     // Start is called before the first frame update
     void Start()
@@ -38,31 +39,31 @@ public class CryptoBehaviour : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        var distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
         if (HasLOS)
         {
             agent.SetDestination(player.transform.position);
+            distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
         }
 
 
-        if (HasLOS && distanceToPlayer < attackDistance)
+        if (HasLOS && distanceToPlayer < attackDistance && !isAttacking)
         {
             // could be an attack
             animator.SetInteger("AnimState", (int)CryptoState.KICK);
             transform.LookAt(transform.position - player.transform.forward);
 
-            if(!isAttacking)
-
-            StartCoroutine(DoKickDamage());
+            DoKickDamage();
+            isAttacking = true;
 
             if (agent.isOnOffMeshLink)
             {
                 animator.SetInteger("AnimState", (int)CryptoState.JUMP);
             }
         }
-        else if (HasLOS)
+        else if (HasLOS && distanceToPlayer > attackDistance)
         {
             animator.SetInteger("AnimState", (int)CryptoState.RUN);
+            isAttacking = false;
         }
         else
         {
@@ -79,12 +80,19 @@ public class CryptoBehaviour : MonoBehaviour
         }
     }
 
-    private IEnumerator DoKickDamage()
+    private void DoKickDamage()
+    {
+        playerBehaviour.TakeDamage(20);
+        StartCoroutine(kickBack());
+    }
+
+    private IEnumerator kickBack()
     {
         yield return new WaitForSeconds(damageDelay);
-        playerBehaviour.TakeDamage(20);
-        playerBehaviour.controller.Move(Vector3.forward * attackDistance);
-        StopCoroutine(DoKickDamage());
+
+        var direction = Vector3.Normalize(player.transform.position - transform.position);
+        playerBehaviour.controller.SimpleMove(direction * kickForce);
+        StopCoroutine(kickBack());
     }
 
 }

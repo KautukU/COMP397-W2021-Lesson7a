@@ -24,7 +24,7 @@ public class HealthBarScreenSpaceController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void TakeDamage(int damage)

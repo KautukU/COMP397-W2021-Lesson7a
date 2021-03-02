@@ -2062,7 +2062,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6938367314831607555
 Transform:
   m_ObjectHideFlags: 0
@@ -2163,6 +2163,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HasLOS: 0
   player: {fileID: 0}
+  attackDistance: 4
+  playerBehaviour: {fileID: 0}
+  damageDelay: 1
+  isAttacking: 0
+  kickForce: 0.01
+  distanceToPlayer: 6
 --- !u!1 &8070676867344797795
 GameObject:
   m_ObjectHideFlags: 0
@@ -2389,11 +2395,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4866614749797918149, guid: 1946eddb751b8134880fc1b2194fec12, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4866614749797918149, guid: 1946eddb751b8134880fc1b2194fec12, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4866614751010623319, guid: 1946eddb751b8134880fc1b2194fec12, type: 3}
       propertyPath: m_Pivot.x
